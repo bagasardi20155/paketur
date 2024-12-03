@@ -4,15 +4,17 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -67,4 +69,18 @@ class User extends Authenticatable
     {
         return [];
     }
+
+    public function staff(): \Illuminate\Database\Eloquent\Relations\HasOne
+	{
+		return $this->hasOne(Staff::class);
+	}
+
+    public function getCompanyUserAttribute()
+	{
+		if($this->staff()->exists()) {
+			return $this->staff->company_id;
+		} else {
+			return null;
+		}
+	}
 }
