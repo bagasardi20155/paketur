@@ -69,7 +69,7 @@ class CompanyController extends Controller
                 'address' => '',
                 'hp' => '',
             ]);
-            $manager_data->assignRole('manager');
+            $manager_account->assignRole('manager');
 
             return response()->json([
                 'data' => new CompanyResource($company),
