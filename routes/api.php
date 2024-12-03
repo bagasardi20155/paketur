@@ -23,6 +23,6 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::middleware(['role_or_permission:employee'])->group(function () {
-        Route::apiResource('employee', EmployeeController::class);
+        Route::apiResource('employee', EmployeeController::class)->only(['index', 'show']);
     });
 });
