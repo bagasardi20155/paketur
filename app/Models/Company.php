@@ -11,6 +11,7 @@ class Company extends Model
 {
     use HasFactory, HasRoles, SoftDeletes;
 
+    protected $guard_name = 'api';
     protected $guarded = ['id'];
 
     public function staff(): \Illuminate\Database\Eloquent\Relations\HasMany

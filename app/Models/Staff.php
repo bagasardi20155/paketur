@@ -11,7 +11,9 @@ class Staff extends Model
 {
     use HasFactory, HasRoles, SoftDeletes;
 
-    protected $guarded = [];
+	protected $guard_name = 'api';
+
+    protected $guarded = ['id'];
 	public $timestamps = false;
 
     public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo

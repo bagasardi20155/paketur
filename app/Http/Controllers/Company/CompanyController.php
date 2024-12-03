@@ -7,6 +7,8 @@ use App\Http\Requests\Company\StoreCompanyRequest;
 use App\Http\Requests\Company\UpdateCompanyRequest;
 use App\Http\Resources\CompanyResource;
 use App\Models\Company;
+use App\Models\Staff;
+use App\Models\User;
 use Spatie\Query;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -55,6 +57,20 @@ class CompanyController extends Controller
         $validatedData = $request->validated();
         try {
             $company = Company::create($validatedData);
+
+            $manager_account = User::create([
+                'name' => "Manager " . $validatedData['name'],
+                'email' => "manager_" . strtolower(str_replace(' ', '', $validatedData['name'])) . "@paketur.com",
+                'password' => bcrypt('password'),
+            ]);
+            $manager_data = Staff::create([
+                'user_id' => $manager_account->id,
+                'company_id' => $company->id,
+                'address' => '',
+                'hp' => '',
+            ]);
+            $manager_data->assignRole('manager');
+
             return response()->json([
                 'data' => new CompanyResource($company),
                 'message' => 'Company Created Successfully',

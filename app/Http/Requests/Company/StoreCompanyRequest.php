@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Company;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreCompanyRequest extends FormRequest
 {
@@ -22,9 +23,19 @@ class StoreCompanyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|unique:companies,name',
-            'email' => 'required|email|unique:companies,email',
-            'phone' => 'required|unique:companies,phone',
+            'name' => [
+                'required',
+                Rule::unique('companies', 'name')->withoutTrashed(),
+            ],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('companies', 'email')->withoutTrashed(),
+            ],
+            'phone' => [
+                'required',
+                Rule::unique('companies', 'phone')->withoutTrashed(),
+            ],
         ];
     }
 }
